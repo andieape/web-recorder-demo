@@ -15,10 +15,10 @@ recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
 
-// Start the GL teapot on the canvas
 
 
-const stream = audio.captureStream(); // frames per second
+
+const stream = audio.captureStream(); 
 console.log('Started stream capture from canvas element: ', stream);
 
 function handleSourceOpen(event) {
