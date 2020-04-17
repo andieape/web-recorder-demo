@@ -75,21 +75,21 @@ function toggleRecording() {
 function startRecording() {
   let options = {mimeType: 'audio/mpeg'};
   recordedBlobs = [];
-  try {
+    try {
   //  mediaRecorder = new MediaRecorder(stream, options);
   mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
-} catch (e0) {
+    } catch (e0) {
     console.log('Unable to create MediaRecorder with options Object: ', e0);
     try {
       options = {mimeType: 'audio/mpeg'};
         //  mediaRecorder = new MediaRecorder(stream, options);
-  mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
+       mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
     } catch (e1) {
       console.log('Unable to create MediaRecorder with options Object: ', e1);
       try {
         options = 'audio/mpeg'; // Chrome 47
          //  mediaRecorder = new MediaRecorder(stream, options);
-  mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
+        mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
       } catch (e2) {
         alert('MediaRecorder is not supported by this browser.\n\n' +
           'Try Firefox 29 or later, or Chrome 47 or later, ' +
@@ -129,7 +129,8 @@ function download() {
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = 'test.mp3';
+  var name = a.href.toString().split("-").reverse()[0];
+  a.download = name + '.mp3';
   document.body.appendChild(a);
   a.click();
   setTimeout(() => {
