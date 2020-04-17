@@ -17,6 +17,10 @@ playButton.onclick = play;
 downloadButton.onclick = download;
 
 
+const worker = new Worker('./js/worker.js');
+
+console.log(worker);
+
 
 
 
@@ -31,7 +35,7 @@ function createNewElement(divId, blobUrl){
 
 function handleSourceOpen(event) {
   console.log('MediaSource opened');
-  sourceBuffer = mediaSource.addSourceBuffer('audio/webm');
+  sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
   console.log('Source buffer: ', sourceBuffer);
 }
 
@@ -48,7 +52,7 @@ function handleStop(event) {
   
 
   var recordedAudio = document.getElementById(divId);
-  const superBuffer = new Blob(recordedBlobs, {type: 'audio/webm'});
+  const superBuffer = new Blob(recordedBlobs, {type: 'audio/mpeg'});
   recordedAudio = window.URL.createObjectURL(superBuffer);
 
   createNewElement(divId, recordedAudio);
@@ -69,20 +73,23 @@ function toggleRecording() {
 
 // The nested try blocks will be simplified when Chrome 47 moves to Stable
 function startRecording() {
-  let options = {mimeType: 'audio/webm'};
+  let options = {mimeType: 'audio/mpeg'};
   recordedBlobs = [];
   try {
-    mediaRecorder = new MediaRecorder(stream, options);
-  } catch (e0) {
+  //  mediaRecorder = new MediaRecorder(stream, options);
+  mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
+} catch (e0) {
     console.log('Unable to create MediaRecorder with options Object: ', e0);
     try {
-      options = {mimeType: 'audio/webm'};
-      mediaRecorder = new MediaRecorder(stream, options);
+      options = {mimeType: 'audio/mpeg'};
+        //  mediaRecorder = new MediaRecorder(stream, options);
+  mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
     } catch (e1) {
       console.log('Unable to create MediaRecorder with options Object: ', e1);
       try {
-        options = 'audio/webm'; // Chrome 47
-        mediaRecorder = new MediaRecorder(stream, options);
+        options = 'audio/mpeg'; // Chrome 47
+         //  mediaRecorder = new MediaRecorder(stream, options);
+  mediaRecorder = new window.mp3MediaRecorder.Mp3MediaRecorder(stream, { worker });
       } catch (e2) {
         alert('MediaRecorder is not supported by this browser.\n\n' +
           'Try Firefox 29 or later, or Chrome 47 or later, ' +
@@ -117,12 +124,12 @@ function play() {
 }
 
 function download() {
-  const blob = new Blob(recordedBlobs, {type: 'audio/webm'});
+  const blob = new Blob(recordedBlobs, {type: 'audio/mpeg'});
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = 'test.webm';
+  a.download = 'test.mp3';
   document.body.appendChild(a);
   a.click();
   setTimeout(() => {
