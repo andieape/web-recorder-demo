@@ -7,6 +7,7 @@ let sourceBuffer;
 const canvas = document.querySelector('canvas');
 const audio = document.getElementById('audio_player');
 
+
 const recordButton = document.querySelector('button#record');
 const playButton = document.querySelector('button#play');
 const downloadButton = document.querySelector('button#download');
@@ -18,8 +19,15 @@ downloadButton.onclick = download;
 
 
 
+
+
 const stream = audio.captureStream(); 
 console.log('Started stream capture from canvas element: ', stream);
+
+
+function createNewElement(divId, blobUrl){
+  $('<audio class="recoded-audio" controls id='+divId+' src='+ blobUrl +'></audio>').appendTo('#file_name');
+}
 
 function handleSourceOpen(event) {
   console.log('MediaSource opened');
@@ -34,9 +42,18 @@ function handleDataAvailable(event) {
 }
 
 function handleStop(event) {
+  var divId = new Date().valueOf().toString();
+  
   console.log('Recorder stopped: ', event);
+  
+
+  var recordedAudio = document.getElementById(divId);
   const superBuffer = new Blob(recordedBlobs, {type: 'audio/webm'});
-  audio.src = window.URL.createObjectURL(superBuffer);
+  recordedAudio = window.URL.createObjectURL(superBuffer);
+
+  createNewElement(divId, recordedAudio);
+  console.log(recordedAudio);
+ 
 }
 
 function toggleRecording() {
@@ -91,7 +108,7 @@ function stopRecording() {
   var line = document.createElement('a');
   
   var fileName = $('#file_name');
-  $( "<p>The file is ready! Hit download</p>" ).appendTo(fileName);
+  $( "<p>The file is ready! Listen below</p>" ).appendTo(fileName);
   
 }
 
